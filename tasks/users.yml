@@ -1,0 +1,9 @@
+- block:
+    - command: '/bin/rpm --query --qf "%{VERSION}" nethserver-sssd'
+      register: sssd_version
+    - name: Create users
+      shell: >-
+        echo -e '{{ item.username }}\t{{ item.full_name}}\t{{ item.password }}'
+        | /usr/share/doc/nethserver-sssd-{{ sssd_version.stdout }}/scripts/import_users
+      loop: "{{ users_list }}"
+  when: not account_provider.remote

@@ -1,0 +1,9 @@
+---
+account_provider:
+  type: "ldap"
+  remote: false
+
+users_list:
+ - username: "test"
+   full_name: "test"
+   password: "test"

@@ -1,0 +1,9 @@
+galaxy_info:
+  role_name: nethserver_accounts_provider
+  author: Matteo Valentini
+  description: Role for manage Nethserver's Accounts Providers
+  license: MIT
+  min_ansible_version: 2.7
+
+dependencies:
+  - amygos.nethserver_esmith

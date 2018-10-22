@@ -1,0 +1,17 @@
+---
+- import_role:
+    name: amygos.nethserver_esmith
+
+- block:
+  - name: Account provider LDAP
+    import_tasks: ldap.yml
+    when: account_provider.type == "ldap"
+
+  - name: Account provider Active Diretory
+    import_tasks: ad.yml
+    when: account_provider.type == "ad"
+  when: nethserver_config | json_query('[?name==`sssd`].props.status | [0]') == 'disabled'
+
+- name: Create Users
+  import_tasks: users.yml
+  when: not account_provider.remote

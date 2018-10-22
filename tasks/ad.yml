@@ -1,0 +1,18 @@
+---
+- block:
+    - name: Configure sssd for local dc
+      command: "/sbin/e-smith/config setprop sssd Realm {{ ssd_realm }} Workgroup {{ ssd_workgroup }}"
+      vars:
+        fqdn_list: "{{ ansible_fqdn.split('.') }}"
+        ssd_realm: "ad.{{ fqdn_list[1:3] | join('.') }}"
+        ssd_workgroup: "{{ fqdn_list[1] | upper }}"
+
+    - name: Configure nsdc
+      command: "/sbin/e-smith/config set nsdc service  IpAddress {{ nsdc_ip }}  status enabled"
+      vars:
+        nsdc_ip: "{{ nethserver_networks | json_query('[1].props.ipaddr') | ipmath(56) }}"
+
+    - name: Install nethserver-dc
+      yum:
+        name: nethserver-dc
+  when: not account_provider.remote

@@ -1,0 +1,22 @@
+---
+- name: Install nethserver-directory
+  yum:
+    name: "@nethserver-directory"
+  when: not account_provider.remote
+
+- block:
+    - name: configure remote LDAP bind
+      command: >-
+        /sbin/e-smith/config setprop sssd
+        LdapURI      {{account_provider.LdapURI }}
+        BindDN       {{ account_provider.BindDN }}
+        BindPassword {{ account_provider.BindPassword }}
+        BaseDN       {{ account_provider.BaseDN }}
+        UserDN       {{ account_provider.UserDN }}
+        GroupDN      {{ account_provider.GroupDN }}
+        StartTls     {{ account_provider.StartTls }}
+        Provider     ldap
+        status       enabled
+    - name: signal-event nethserver-sssd-save
+      command: /sbin/e-smith/signal-event nethserver-sssd-save
+  when: account_provider.remote
